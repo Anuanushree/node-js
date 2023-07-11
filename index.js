@@ -1,9 +1,11 @@
 const express = require('express');
 
 const app = express();
+const cors = require('cors');
 
 // middlewhere
 
+app.use(cors);
 app.use(express.json());
 
 let notes = [
