@@ -1,5 +1,5 @@
 const express = require('express');
-
+const mongoose = require('mongoose');
 const app = express();
 const cors = require('cors');
 
@@ -8,23 +8,42 @@ const cors = require('cors');
 app.use(cors);
 app.use(express.json());
 
-let notes = [
-    {
-        id: 1,
-        content: "backend seerver using nodejs",
-        important: true
-    },
-    {
-        id: 2,
-        content: "backend restfull usigng nodejs will grow complex",
-        important: false
-    },
-    {
-        id: 3,
-        content: "content-3",
-        important: true
-    }
-];
+
+
+const url = 'mongodb+srv://anushree:Nsaatf4VgEFY6VtY@cluster0.f6ma1cw.mongodb.net/NotesDb?retryWrites=true&w=majority';
+
+mongoose.connect(url)
+    .then(() => {
+        console.log('connected to mongodb');
+    })
+    .catch((err) => {
+        console.error(err);
+    })
+
+const noteSchema = new mongoose.Schema({
+    content: String,
+    important: Boolean,
+});
+
+const Note = mongoose.model('Note', noteSchema, 'note');
+
+// let notes = [
+//     {
+//         id: 1,
+//         content: "backend seerver using nodejs",
+//         important: true
+//     },
+//     {
+//         id: 2,
+//         content: "backend restfull usigng nodejs will grow complex",
+//         important: false
+//     },
+//     {
+//         id: 3,
+//         content: "content-3",
+//         important: true
+//     }
+// ];
 
 // endpoints and  / route
 app.get('/', (request, response) => {
