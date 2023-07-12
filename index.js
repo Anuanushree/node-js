@@ -5,11 +5,11 @@ const router = require('./router/router');
 const cors = require('cors');
 
 // middlewhere
-app.use(cors);
+app.use(cors());
 app.use(express.json());
 
 app.get('/', (request, response) => {
-    response.send('to create a file give the path name as /create')
+    response.send('to create a file give the path name as /create and to read the particular folder give /list')
 })
 app.use(router);
 const PORT = 3001;
