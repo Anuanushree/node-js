@@ -1,12 +1,21 @@
-const bookingroom =[
+let roombooking = [
     {
-        id:1,
-        "customer name" :"anu",
-        "date":new Date().toLocaleDateString(),
-        "start time" : "12.00 pm",
-        "end time":"5.00 pm",
-        "status":"booked"
-    }
-]
+        roomid: 1,
+        customerName: "anu",
+        date: new Date().toLocaleDateString(),
+        startTime: "12.00 pm",
+        endTime: "5.00 pm",
+        status: "booked"
+    },
+    {
+        roomid: 2,
+        customerName: "anu",
+        date: new Date().toLocaleDateString(),
+        startTime: "5.00 pm",
+        endTime: "8.00 pm",
+        status: " not-booked"
+    },
+];
 
-module.exports= bookingroom;
+
+module.exports= roombooking;
