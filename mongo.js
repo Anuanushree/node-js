@@ -11,37 +11,37 @@ mongoose.connect(url)
     })
 
 const noteSchema = new mongoose.Schema({
-    content: String, 
+    content: String,
     important: Boolean,
 });
 
-const Note = mongoose.model('Note', noteSchema,'note');
+const Note = mongoose.model('Note', noteSchema, 'note');
 
 const note = new Note({
     content: 'mongodb connection using mongoo libarray',
     important: false,
 });
 
-let notes=[
+let notes = [
     {
         content: 'data1',
-        important: false,   
+        important: false,
     },
     {
         content: 'data2',
         important: false,
-    }
+    },
 ];
-notes.forEach(note=>{
+notes.forEach(note => {
     let noteModel = new Note(note);
-    
+
     noteModel.save()
-     .then(()=>{
-        console.log('note saved');
-     })
+        .then(() => {
+            console.log('note saved');
+        })
 })
 note.save()
     .then((result) => {
         console.log('note saved');
         mongoose.connection.close();
-    });
+    });  
