@@ -1,34 +1,63 @@
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 
-const url = 'mongodb+srv://anushree:Nsaatf4VgEFY6VtY@cluster0.f6ma1cw.mongodb.net/Student-Mentor?retryWrites=true&w=majority';
+// const { default: mongoose } = require("mongoose");
 
-mongoose.connect(url)
-    .then(() => {
-        console.log('connected to mongodb');
-    })
-    .catch((err) => {
-        console.error(err);
-    })
+// const url = 'mongodb+srv://anushree:Nsaatf4VgEFY6VtY@cluster0.f6ma1cw.mongodb.net/Student-Mentor?retryWrites=true&w=majority';
 
-const Mentor = new mongoose.Schema({
+// mongoose.connect(url)
+//     .then(() => {
+//         console.log('connected to mongodb');
+//     })
+//     .catch((err) => {
+//         console.error(err);
+//     })
+
+// const MentorSchema = new mongoose.Schema({
+//     id: Number,
+//     mentorName: String,
+//     email:String,
+//     student: [mongoose.Schema.Types.Array]
+// });
+
+// const Mentor = mongoose.model('Mentor', MentorSchema, 'mentor');
+
+// const mentor = new Mentor({
+//     id: 1,
+//     mentorName:"sathish",
+//     email: "sathish@gmail.com",
+//     student: [mongoose.Schema.Types.Array]
+// });
+
+// mentor.save()
+//     .then((result) => {
+//         console.log('mentor saved');
+//         mongoose.connection.close();
+//     });  
+
+const studentSchema = new mongoose.Schema({
     id: Number,
-    mentorName: String,
-    email:String,
-    student:[mongoose.id]
+    studentName: String,
+    studentBatch: String,
+    mentor: [mongoose.Schema.Types.Array]
 });
 
-const Note = mongoose.model('Note', Mentor, 'note');
-
-const note = new Note({
+const Student = mongoose.model('Student', studentSchema, 'student');
+const student = new Student({
     id: 1,
-    mentorName:"sathish",
-    email: "sathish@gmail.com",
-    student: [mongoose.Schema.Types.id]
+    studentName: "anu",
+    studentBatch: "b47",
+    mentor: [mongoose.Schema.Types.Array]
 });
-
-
-note.save()
+student.save()
     .then((result) => {
-        console.log('note saved');
+        console.log('student saved');
         mongoose.connection.close();
-    });  
+    
+});
+Student.find({},{})
+  .then(data=>{
+    data.forEach(note=>{
+        console.log(note);
+    });
+    mongoose.connection.close
+  })

@@ -1,16 +1,12 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const app = express();
-const cors = require('cors');
+// const cors = require('cors');
+const mongoose = require('mongoose');
 
 // middlewhere
-
-app.use(cors);
+// app.use(cors);
 app.use(express.json());
-
-
-
-const url = 'mongodb+srv://anushree:Nsaatf4VgEFY6VtY@cluster0.f6ma1cw.mongodb.net/NotesDb?retryWrites=true&w=majority';
+const url = 'mongodb+srv://anushree:Nsaatf4VgEFY6VtY@cluster0.f6ma1cw.mongodb.net/Student-Mentor?retryWrites=true&w=majority';
 
 mongoose.connect(url)
     .then(() => {
@@ -20,97 +16,100 @@ mongoose.connect(url)
         console.error(err);
     })
 
-const noteSchema = new mongoose.Schema({
-    content: String,
-    important: Boolean,
+const MentorSchema = new mongoose.Schema({
+    id: Number,
+    mentorName: String,
+    email: String,
+    student: [mongoose.Schema.Types.Array]
 });
 
-const Note = mongoose.model('Note', noteSchema, 'note');
+const Mentor = mongoose.model('Mentor', MentorSchema, 'mentor');
+const studentSchema = new mongoose.Schema({
+    id: Number,
+    studentName: String,
+    studentBatch: String,
+    mentor: [mongoose.Schema.Types.Array]
+});
 
-// let notes = [
-//     {
-//         id: 1,
-//         content: "backend seerver using nodejs",
-//         important: true
-//     },
-//     {
-//         id: 2,
-//         content: "backend restfull usigng nodejs will grow complex",
-//         important: false
-//     },
-//     {
-//         id: 3,
-//         content: "content-3",
-//         important: true
-//     }
-// ];
-
-// endpoints and  / route
-app.get('/', (request, response) => {
-    response.send('<h1>hello world</h1>')
-})
-
+const Student = mongoose.model('Student', studentSchema, 'student');
 // to get all the notes
-app.get('/api/notes', (request, response) => {
-    response.status(200).json(notes);
+app.get('/api/mentor', (request, response) => {
+    Mentor.find({}, {})
+        .then(mentors => {
+            response.status(200).json(mentors);
+        });
+     
 });
 
-// post endpoint
-
-app.post('/api/notes', (request, response) => {
-    notes = notes.concat(request.body);
-    response.status(201).json({ message: 'node created successfullt successfully' })
+app.post('/api/mentor', (request, response) => {
+   const mentor=new Mentor(request.body);
+   mentor.save()
+     .then(()=>{
+          response.status(201).json({ message: 'node created successfullt successfully' })  
+     })   
 })
-
-// fetch a single resource based on id
-
-app.get('/api/notes/:id', (request, response) => {
-    const id = request.params.id;
-    const note = notes.find(note => note.id == id);
-    if (note) {
-        response.status(200).json(note);
-    } else {
-        response.status(404).json({ message: 'id does not exists' })
-    }
-
+app.get('/api/student', (req, res) => {
+    Student.find({}, {})
+        .then(datas => {
+            res.status(200).json(datas)
+        })
 })
+app.post('/api/student', (request, response) => {
+    const student = new Student(request.body);
+    student.save()
+        .then(() => {
+            response.status(201).json({ message: 'node created successfullt successfully' })
+        })
+})
+// // fetch a single resource based on id
 
-app.delete('/api/notes/:id', (request, response) => {
-    const id = request.params.id;
-    const note = notes.find(note => note.id == id);
-    notes = notes.filter(note => note.id != id)
-    if (note) {
-        response.status(200).json(note);
-    } else {
-        response.status(404).json({ message: 'id does not exists' })
-    }
-});
+// app.get('/api/notes/:id', (request, response) => {
+//     const id = request.params.id;
+//     const note = notes.find(note => note.id == id);
+//     if (note) {
+//         response.status(200).json(note);
+//     } else {
+//         response.status(404).json({ message: 'id does not exists' })
+//     }
 
-app.put('/api/notes/:id', (request, response) => {
-    const id = request.params.id;
-    const notereplace = request.body;
-    const note = notes.find(note => note.id == id);
-    notes = notes.map(note => note.id == id ? notereplace : note);
+// })
 
-    if (note) {
-        response.status(200).json({ message: 'note replaced' });
-    } else {
-        response.status(404).json({ message: 'id does not find' })
-    }
-});
+// app.delete('/api/notes/:id', (request, response) => {
+//     const id = request.params.id;
+//     const note = notes.find(note => note.id == id);
+//     notes = notes.filter(note => note.id != id)
+//     if (note) {
+//         response.status(200).json(note);
+//     } else {
+//         response.status(404).json({ message: 'id does not exists' })
+//     }
+// });
 
-app.patch('/api/notes/:id', (request, response) => {
-    const id = request.params.id;
-    const notereplace = request.body;
-    const note = notes.find(note => note.id == id);
-    notes = notes.map(note => note.id == id ? { ...note, ...notereplace } : note);
+// app.put('/api/notes/:id', (request, response) => {
+//     const id = request.params.id;
+//     const notereplace = request.body;
+//     const note = notes.find(note => note.id == id);
+//     notes = notes.map(note => note.id == id ? notereplace : note);
 
-    if (note) {
-        response.status(200).json({ message: 'note replaced' });
-    } else {
-        response.status(404).json({ message: 'id does not find' })
-    }
-});
+//     if (note) {
+//         response.status(200).json({ message: 'note replaced' });
+//     } else {
+//         response.status(404).json({ message: 'id does not find' })
+//     }
+// });
+
+// app.patch('/api/notes/:id', (request, response) => {
+//     const id = request.params.id;
+//     const notereplace = request.body;
+//     const note = notes.find(note => note.id == id);
+//     notes = notes.map(note => note.id == id ? { ...note, ...notereplace } : note);
+
+//     if (note) {
+//         response.status(200).json({ message: 'note replaced' });
+//     } else {
+//         response.status(404).json({ message: 'id does not find' })
+//     }
+// });
 const PORT = 3001;
 app.listen(PORT, () => {
     console.log(`server running port ${PORT}`);
