@@ -1,0 +1,286 @@
+// postman link = https: //orange-station-926384.postman.co/workspace/New-Team-Workspace~5248061c-e5f7-4437-8d40-1446e98361de/collection/27684930-73429059-2286-4fde-a129-8fd2ebe06376?action=share&creator=27684930
+
+{
+	"info": {
+		"_postman_id": "73429059-2286-4fde-a129-8fd2ebe06376",
+		"name": "Hall-collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27684930",
+		"_collection_link": "https://orange-station-926384.postman.co/workspace/5248061c-e5f7-4437-8d40-1446e98361de/collection/27684930-73429059-2286-4fde-a129-8fd2ebe06376?action=share&creator=27684930&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "http://localhost:3002/api/room",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3002/api/room",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"api",
+						"room"
+					]
+				},
+				"description": "To view the availaible room"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/room",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"id\": 7,\r\n        \"roomName\": \"The Spiral Gardens\",\r\n        \"numberOfSeatsAvailaible\": 100,\r\n        \"amenties\": [\r\n            \"ac,fan,generator\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3002/api/room",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"api",
+						"room"
+					]
+				},
+				"description": "to add the room"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/room/3",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"roomName\": \"Acacia Gardens\",\r\n    \"numberOfSeatsAvailaible\": 150,\r\n    \"amenties\": [\r\n        \"ac,fan,generator\"\r\n    ],\r\n    \"chargeForPerHour\": 6000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3002/api/room/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"api",
+						"room",
+						"1"
+					]
+				},
+				"description": "to edit the particular room by id"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/roombooking",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3002/api/roombooking",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"api",
+						"roombooking"
+					]
+				},
+				"description": "to view all the booking details"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/roombooking",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n        \"roomid\": 3,\r\n        \"customerName\": \"abi\",\r\n        \"date\": \"13/7/2023\",\r\n        \"startTime\": \"11.00 pm\",\r\n        \"endTime\": \"5.00 pm\",\r\n        \"status\": \"booked\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3002/api/roombooking",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"api",
+						"roombooking"
+					]
+				},
+				"description": "to add the customer for booking"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/roombooking/1",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n        \"roomid\": 3,\r\n        \"customerName\": \"abi\",\r\n        \"date\": \"14/7/2023\",\r\n        \"startTime\": \"12.00 pm\",\r\n        \"endTime\": \"5.00 pm\",\r\n        \"status\": \"booked\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3002/api/roombooking/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"api",
+						"roombooking",
+						"3"
+					]
+				},
+				"description": "to delete the customer"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/roomdetails",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"roomid\": 3,\r\n    \"roomName\": \"Acacia Gardens\",\r\n    \"numberOfSeatsAvailaible\": 150,\r\n    \"amenties\": [\r\n        \"ac,fan,generator\"\r\n    ],\r\n    \"chargeForPerHour\": 6000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3002/api/roomdetails",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"api",
+						"roomdetails"
+					]
+				},
+				"description": "list out all the room with booking data"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/customerdetails",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n        \"roomid\": 3,\r\n        \"customerName\": \"abi\",\r\n        \"date\": \"13/7/2023\",\r\n        \"startTime\": \"1.00 pm\",\r\n        \"endTime\": \"4.00 pm\",\r\n        \"status\": \"booked\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3002/api/customerdetails",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"api",
+						"customerdetails"
+					]
+				},
+				"description": "list out all the customer with data"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/customer",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3002/api/customer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"api",
+						"customer"
+					]
+				},
+				"description": ".list how many times a customer has booked :"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3002/api/room/6",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3002/api/room/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"api",
+						"room",
+						"6"
+					]
+				},
+				"description": "to delete the particular room by id"
+			},
+			"response": []
+		}
+	]
+}
