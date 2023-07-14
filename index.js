@@ -36,7 +36,7 @@ app.get('/api/room/:id', (request, response) => {
 app.post('/api/room', (request, response) => {
     room = room.concat(request.body);
     console.log(request.body);
-    response.status(201).json({ message: 'node created successfullt successfully' })
+    response.status(201).json({ message: 'node created  successfully' })
 });
 
 app.put('/api/room/:id', (request, response) => {
@@ -55,7 +55,7 @@ app.delete('/api/room/:id', (request, response) => {
     const data = room.find(rooms => rooms.id == id);
     room = room.filter(rooms => rooms.id != id);
     if (data)
-        response.status(200).json(data)
+        response.status(200).json({ message: 'id deleted successfuly' })
     else
         response.status(200).json({ message: 'id doest not exists' })
 
@@ -104,7 +104,7 @@ app.delete('/api/roombooking/:id', (request, response) => {
     const data = roombooking.find(rooms => rooms.roomid == id);
     roombooking = roombooking.filter(rooms => rooms.roomid != id);
     if (data)
-        response.status(200).json(data)
+        response.status(200).json({ message: 'id deleted successfuly' })
     else
         response.status(200).json({ message: 'id doest not exists' })
 
