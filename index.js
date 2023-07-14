@@ -28,7 +28,7 @@ const studentSchema = new mongoose.Schema({
     id: Number,
     studentName: String,
     studentBatch: String,
-    mentor: [mongoose.Schema.Types.Array]
+    mentor: Array
 });
 
 const Student = mongoose.model('Student', studentSchema, 'student');
@@ -38,29 +38,45 @@ app.get('/api/mentor', (request, response) => {
         .then(mentors => {
             response.status(200).json(mentors);
         });
-     
+
 });
 
-app.post('/api/mentor', (request, response) => {
-   const mentor=new Mentor(request.body);
-   mentor.save()
-     .then(()=>{
-          response.status(201).json({ message: 'node created successfullt successfully' })  
-     })   
-})
+// app.post('/api/mentor', (request, response) => {
+//     const mentor = new Mentor(request.body);
+//     mentor.save()
+//         .then(() => {
+//             response.status(201).json({ message: 'node created successfullt successfully' })
+//         });
+// });
 app.get('/api/student', (req, res) => {
     Student.find({}, {})
         .then(datas => {
             res.status(200).json(datas)
+        });
+});
+app.put('/api/mentor/1', (request, response) => {
+    const { mentorId, studentId } = new Mentor(request.body);
+    const id = request.params.id;
+    Mentor.findByIdAndUpdate(id)
+        .then(mentor => {
+            mentor.student.push(new Array[studentId]);
+            mentor.save()
+                .then(() => response.json({ message: 'node created successfullt successfully' }))
+                .catch(err => response.status(400).json('error: ' + err))
+
         })
-})
-app.post('/api/student', (request, response) => {
-    const student = new Student(request.body);
-    student.save()
-        .then(() => {
-            response.status(201).json({ message: 'node created successfullt successfully' })
-        })
-})
+        .catch(err => response.status(400).json('error: ' + err))
+});
+// app.post('/api/create', (request, response) => 
+//     const {studentid,mentorid} = new Student(request.body);
+//     student.save()
+//         .then(() => {
+//             response.status(201).json({ message: 'node created successfullt successfully' })
+//         })
+// })
+
+
+
 // // fetch a single resource based on id
 
 // app.get('/api/notes/:id', (request, response) => {
