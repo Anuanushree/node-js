@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 // middlewhere
 // app.use(cors);
 app.use(express.json());
-const url = 'mongodb+srv://anushree:Nsaatf4VgEFY6VtY@cluster0.f6ma1cw.mongodb.net/Student-Mentor?retryWrites=true&w=majority';
+const url = 'mongodb+srv://anushree:Nsaatf4VgEFY6VtY@cluster0.f6ma1cw.mongodb.net/create-user?retryWrites=true&w=majority';
 
 mongoose.connect(url)
     .then(() => {
@@ -16,51 +16,53 @@ mongoose.connect(url)
         console.error(err);
     })
 
-const MentorSchema = new mongoose.Schema({
+// const MentorSchema = new mongoose.Schema({
+//     id: Number,
+//     mentorName: String,
+//     email: String,
+//     student: [mongoose.Schema.Types.Array]
+// });
+
+// const Mentor = mongoose.model('Mentor', MentorSchema, 'mentor');
+const userSchema = new mongoose.Schema({
     id: Number,
-    mentorName: String,
+    Name: String,
     email: String,
-    student: [mongoose.Schema.Types.Array]
+    password:String,
+    phn: Number,
+    textarea :String
 });
 
-const Mentor = mongoose.model('Mentor', MentorSchema, 'mentor');
-const studentSchema = new mongoose.Schema({
-    id: Number,
-    studentName: String,
-    studentBatch: String,
-    mentor: [mongoose.Schema.Types.Array]
-});
-
-const Student = mongoose.model('Student', studentSchema, 'student');
+const User = mongoose.model('User', userSchema, 'user');
 // to get all the notes
-app.get('/api/mentor', (request, response) => {
-    Mentor.find({}, {})
-        .then(mentors => {
-            response.status(200).json(mentors);
+app.get('/api/user', (request, response) => {
+    User.find({}, {})
+        .then(user => {
+            response.status(200).json(user);
         });
      
 });
 
-app.post('/api/mentor', (request, response) => {
-   const mentor=new Mentor(request.body);
+app.post('/api/user', (request, response) => {
+   const mentor=new User(request.body);
    mentor.save()
      .then(()=>{
           response.status(201).json({ message: 'node created successfullt successfully' })  
      })   
 })
-app.get('/api/student', (req, res) => {
-    Student.find({}, {})
-        .then(datas => {
-            res.status(200).json(datas)
-        })
-})
-app.post('/api/student', (request, response) => {
-    const student = new Student(request.body);
-    student.save()
-        .then(() => {
-            response.status(201).json({ message: 'node created successfullt successfully' })
-        })
-})
+// app.get('/api/student', (req, res) => {
+//     Student.find({}, {})
+//         .then(datas => {
+//             res.status(200).json(datas)
+//         })
+// })
+// app.post('/api/student', (request, response) => {
+//     const student = new Student(request.body);
+//     student.save()
+//         .then(() => {
+//             response.status(201).json({ message: 'node created successfullt successfully' })
+//         })
+// })
 // // fetch a single resource based on id
 
 // app.get('/api/notes/:id', (request, response) => {
