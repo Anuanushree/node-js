@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -6,7 +7,8 @@ const mongoose = require('mongoose');
 // middlewhere
 app.use(cors());
 app.use(express.json());
-const url = 'mongodb+srv://anushree:Nsaatf4VgEFY6VtY@cluster0.f6ma1cw.mongodb.net/create-user?retryWrites=true&w=majority';
+
+const url = process.env.ATLAS_URL;
 
 mongoose.connect(url)
     .then(() => {
@@ -42,7 +44,7 @@ app.get('/user/:id', (request, response) => {
             if (deleteuser) {
                 response.status(200).json(User);
             } else {
-                 response.status(404).json({ message: 'id does not exists' })
+                response.status(404).json({ message: 'id does not exists' })
             }
         })
 
@@ -67,7 +69,7 @@ app.delete('/user/:id', (request, response) => {
             } else {
                 response.status(404).json({ message: 'id does not exists' })
             }
-        }) 
+        })
 
 });
 
