@@ -21,7 +21,7 @@ mongoose.connect(url)
 
 const userSchema = new mongoose.Schema({
     id: Number,
-    Name: String,
+    name: String,
     email: String,
     password: String,
     phn: Number,
