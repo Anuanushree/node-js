@@ -86,7 +86,7 @@ app.put('/user/:id', (request, response) => {
         })
 });
 
-const PORT = 3001;
+const PORT = process.env.Port || 3001;
 app.listen(PORT, () => {
     console.log(`server running port ${PORT}`);
 });
