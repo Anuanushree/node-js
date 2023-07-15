@@ -33,7 +33,9 @@ app.get('/user', (request, response) => {
     User.find({}, {})
         .then(user => {
             response.status(200).json(user);
-        });
+        }).catch((err) => {
+            console.log(err)
+        })
 
 });
 app.get('/user/:id', (request, response) => {
