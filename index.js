@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
+const PORT = process.env.Port || 3001;
 
 // middlewhere
 app.use(cors());
@@ -87,8 +88,10 @@ app.put('/user/:id', (request, response) => {
             }
         })
 });
+app.get('/', (req, res) => {
+    res.send('Hello World!')
+})
 
-const PORT = process.env.Port || 3001;
 app.listen(PORT, () => {
     console.log(`server running port ${PORT}`);
 });
