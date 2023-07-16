@@ -1,12 +1,13 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
-// const cors = require('cors');
+const cors = require('cors');
 const mongoose = require('mongoose');
 
 // middlewhere
-// app.use(cors);
+app.use(cors());
 app.use(express.json());
-const url = 'mongodb+srv://anushree:Nsaatf4VgEFY6VtY@cluster0.f6ma1cw.mongodb.net/Student-Mentor?retryWrites=true&w=majority';
+const url =process.env.ATLAS_URL;
 
 mongoose.connect(url)
     .then(() => {
@@ -20,7 +21,7 @@ const MentorSchema = new mongoose.Schema({
     id: Number,
     mentorName: String,
     email: String,
-    student: [mongoose.Schema.Types.Array]
+    student: Array
 });
 
 const Mentor = mongoose.model('Mentor', MentorSchema, 'mentor');
@@ -28,6 +29,7 @@ const studentSchema = new mongoose.Schema({
     id: Number,
     studentName: String,
     studentBatch: String,
+    previewsMentor:String,
     mentor: Array
 });
 
@@ -41,91 +43,89 @@ app.get('/api/mentor', (request, response) => {
 
 });
 
-// app.post('/api/mentor', (request, response) => {
-//     const mentor = new Mentor(request.body);
-//     mentor.save()
-//         .then(() => {
-//             response.status(201).json({ message: 'node created successfullt successfully' })
-//         });
-// });
+// 1. write api to create mentor
+
+app.post('/api/mentor', (request, response) => {
+    const mentor = new Mentor(request.body);
+    mentor.save()
+        .then(() => {
+            response.status(201).json({ message: 'node created successfullt successfully' })
+        });
+});
 app.get('/api/student', (req, res) => {
     Student.find({}, {})
         .then(datas => {
             res.status(200).json(datas)
         });
 });
-app.put('/api/mentor/1', (request, response) => {
-    const { mentorId, studentId } = new Mentor(request.body);
-    const id = request.params.id;
-    Mentor.findByIdAndUpdate(id)
+
+// 2.write api to create student
+
+app.post('/api/student', (request, response) => {
+    const student = new Student(request.body);
+    student.save()
+        .then(() => {
+            response.status(201).json({ message: 'node created successfullt successfully' })
+        });
+});
+// 3. write api to assigna student to mentor
+
+app.post('/api/mentor-student', (request, response) => {
+    const { mentorid, studentname } = request.body;
+    Mentor.findById(request.body.mentorid)
         .then(mentor => {
-            mentor.student.push(new Array[studentId]);
+            mentor.student.push(request.body.studentname);
             mentor.save()
-                .then(() => response.json({ message: 'node created successfullt successfully' }))
+                .then(() => response.json({ message: 'node created successfully' }))
                 .catch(err => response.status(400).json('error: ' + err))
 
         })
         .catch(err => response.status(400).json('error: ' + err))
 });
-// app.post('/api/create', (request, response) => 
-//     const {studentid,mentorid} = new Student(request.body);
-//     student.save()
-//         .then(() => {
-//             response.status(201).json({ message: 'node created successfullt successfully' })
-//         })
-// })
 
+//4.  write a assign or change mentor for particular student
 
+app.post('/api/student-mentor', (request, response) => {
+    const { studentid, mentorname } = request.body;
+    Student.findById(request.body.studentid)
+        .then(student => {
+            if (student.mentor.length == 0) {
+                student.mentor.push(request.body.mentorname);
+                student.save()
+                    .then(() => response.json({ message: 'node created successfully' }))
+                    .catch(err => response.status(400).json('error: ' + err))
+                return;
+            } else {
 
-// // fetch a single resource based on id
+                student.previewsMentor=`${student.mentor}`;
+                student.mentor.pop();
+                student.mentor.push(request.body.mentorname);
+                student.save()
+                    .then(() => response.json({ message: 'node created successfully' }))
+                    .catch(err => response.status(400).json('error: ' + err))
+            }
+        })
 
-// app.get('/api/notes/:id', (request, response) => {
-//     const id = request.params.id;
-//     const note = notes.find(note => note.id == id);
-//     if (note) {
-//         response.status(200).json(note);
-//     } else {
-//         response.status(404).json({ message: 'id does not exists' })
-//     }
+        .catch(err => response.status(400).json('error: ' + err))
+});
 
-// })
+// 5 . write api to show all student for a particular mentor 
 
-// app.delete('/api/notes/:id', (request, response) => {
-//     const id = request.params.id;
-//     const note = notes.find(note => note.id == id);
-//     notes = notes.filter(note => note.id != id)
-//     if (note) {
-//         response.status(200).json(note);
-//     } else {
-//         response.status(404).json({ message: 'id does not exists' })
-//     }
-// });
+app.get('/api/mentor/:name',(request,response)=>{
+    Student.find({ mentor: request.params.name }, { _id: 0, studentName: 1, studentBatch: 1 })
+      .then(studentdata=>{
+        response.status(200).json(studentdata)
+      })
+});
 
-// app.put('/api/notes/:id', (request, response) => {
-//     const id = request.params.id;
-//     const notereplace = request.body;
-//     const note = notes.find(note => note.id == id);
-//     notes = notes.map(note => note.id == id ? notereplace : note);
+// 6 write an api to show the previously assigned mentor for a particular student
 
-//     if (note) {
-//         response.status(200).json({ message: 'note replaced' });
-//     } else {
-//         response.status(404).json({ message: 'id does not find' })
-//     }
-// });
-
-// app.patch('/api/notes/:id', (request, response) => {
-//     const id = request.params.id;
-//     const notereplace = request.body;
-//     const note = notes.find(note => note.id == id);
-//     notes = notes.map(note => note.id == id ? { ...note, ...notereplace } : note);
-
-//     if (note) {
-//         response.status(200).json({ message: 'note replaced' });
-//     } else {
-//         response.status(404).json({ message: 'id does not find' })
-//     }
-// });
+app.get('/api/student/:name', (request, response) => {
+    Student.find({ studentName: request.params.name }, { _id: 0, studentName: 1,previewsMentor:1 })
+        .then(studentdata => {
+            response.status(200).json(studentdata)
+        })
+});
 const PORT = 3001;
 app.listen(PORT, () => {
     console.log(`server running port ${PORT}`);
