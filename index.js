@@ -35,6 +35,18 @@ const studentSchema = new mongoose.Schema({
 
 const Student = mongoose.model('Student', studentSchema, 'student');
 // to get all the notes
+app.get('/', (request, response) => {
+            response.send(`
+            => to add mentor = /api/mentor,
+            =>to add student=/api/student,
+            =>to assign a mentor for student=/api/mentor-student,
+            =>to assign or change a mentor for student=/api/student-mentor,
+            =>to show all student for a particular mentor,
+            =>to show the previously assigned mentor for a particular student,
+            `);
+        
+
+});
 app.get('/api/mentor', (request, response) => {
     Mentor.find({}, {})
         .then(mentors => {
