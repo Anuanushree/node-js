@@ -4,142 +4,111 @@ const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
 
-// middlewhere
+// middleware
 app.use(cors());
 app.use(express.json());
-const url =process.env.ATLAS_URL;
+
+const url = process.env.ATLAS_URI;
 
 mongoose.connect(url)
     .then(() => {
-        console.log('connected to mongodb');
+        console.log('Connected to MongoDB');
     })
     .catch((err) => {
         console.error(err);
-    })
+    });
 
-const MentorSchema = new mongoose.Schema({
-    id: Number,
-    mentorName: String,
-    email: String,
-    student: Array
-});
+const Note = require('./models/note');
 
-const Mentor = mongoose.model('Mentor', MentorSchema, 'mentor');
-const studentSchema = new mongoose.Schema({
-    id: Number,
-    studentName: String,
-    studentBatch: String,
-    previewsMentor:String,
-    mentor: Array
-});
 
-const Student = mongoose.model('Student', studentSchema, 'student');
-// to get all the notes
-app.get('/', (request, response) => {
-            response.send(`
-            => to add mentor = /api/mentor,
-            =>to add student=/api/student,
-            =>to assign a mentor for student=/api/mentor-student,
-            =>to assign or change a mentor for student=/api/student-mentor,
-            =>to show all student for a particular mentor,
-            =>to show the previously assigned mentor for a particular student,
-            `);
-        
+/*
+    endpoints
 
-});
-app.get('/api/mentor', (request, response) => {
-    Mentor.find({}, {})
-        .then(mentors => {
-            response.status(200).json(mentors);
-        });
+    URL             Request Type    Functionality
+    /api/notes      GET             fetches all the notes
+    /api/notes/10   GET             fetches a single note
+    /api/notes      POST            creates a new note based on the request data
+    /api/notes/10   DELETE          deletes a note identified by id
+    /api/notes/10   PUT             replaces the entire note identified by id with the request data
+    /api/notes/10   PATCH           replaces a part of the note identified by id with the request data
+*/
 
-});
+// set the endpoints
 
-// 1. write api to create mentor
+// endpoint to get all the notes
+app.use('/api/notes', require('./routes/getAllNotes'));
 
-app.post('/api/mentor', (request, response) => {
-    const mentor = new Mentor(request.body);
-    mentor.save()
+// creates a new resource based on the request data
+app.post('/api/notes', (request, response) => {
+    // prepare an object to store it in the collection
+    const note = new Note(request.body);
+
+    note.save()
         .then(() => {
-            response.status(201).json({ message: 'node created successfullt successfully' })
-        });
-});
-app.get('/api/student', (req, res) => {
-    Student.find({}, {})
-        .then(datas => {
-            res.status(200).json(datas)
+            response.status(201).json({ message: 'note created successfully' });
         });
 });
 
-// 2.write api to create student
+// fetches a single resource based on id
+app.get('/api/notes/:id', (request, response) => {
+    const id = request.params.id;
 
-app.post('/api/student', (request, response) => {
-    const student = new Student(request.body);
-    student.save()
-        .then(() => {
-            response.status(201).json({ message: 'node created successfullt successfully' })
-        });
-});
-// 3. write api to assigna student to mentor
-
-app.post('/api/mentor-student', (request, response) => {
-    const { mentorid, studentname } = request.body;
-    Mentor.findById(request.body.mentorid)
-        .then(mentor => {
-            mentor.student.push(request.body.studentname);
-            mentor.save()
-                .then(() => response.json({ message: 'node created successfully' }))
-                .catch(err => response.status(400).json('error: ' + err))
-
-        })
-        .catch(err => response.status(400).json('error: ' + err))
-});
-
-//4.  write a assign or change mentor for particular student
-
-app.post('/api/student-mentor', (request, response) => {
-    const { studentid, mentorname } = request.body;
-    Student.findById(request.body.studentid)
-        .then(student => {
-            if (student.mentor.length == 0) {
-                student.mentor.push(request.body.mentorname);
-                student.save()
-                    .then(() => response.json({ message: 'node created successfully' }))
-                    .catch(err => response.status(400).json('error: ' + err))
-                return;
+    Note.findById(id)
+        .then(note => {
+            if (note) {
+                response.status(200).json(note);
             } else {
-
-                student.previewsMentor=`${student.mentor}`;
-                student.mentor.pop();
-                student.mentor.push(request.body.mentorname);
-                student.save()
-                    .then(() => response.json({ message: 'node created successfully' }))
-                    .catch(err => response.status(400).json('error: ' + err))
+                response.status(404).json({ message: 'id does not exists' });
             }
-        })
-
-        .catch(err => response.status(400).json('error: ' + err))
+        });
 });
 
-// 5 . write api to show all student for a particular mentor 
+// deletes a single resource based on id
+app.delete('/api/notes/:id', (request, response) => {
+    // get the id
+    const id = request.params.id;
 
-app.get('/api/mentor/:name',(request,response)=>{
-    Student.find({ mentor: request.params.name }, { _id: 0, studentName: 1, studentBatch: 1 })
-      .then(studentdata=>{
-        response.status(200).json(studentdata)
-      })
+    Note.findByIdAndDelete(id)
+        .then((deletedNote) => {
+            if (deletedNote) {
+                response.status(204).json({ message: 'note deleted successfully' });
+            } else {
+                response.status(404).json({ message: 'id does not exists' });
+            }
+        });
 });
 
-// 6 write an api to show the previously assigned mentor for a particular student
+// replaces the entire note object identified by an id
+app.put('/api/notes/:id', (request, response) => {
+    const id = request.params.id;
+    const noteToReplace = request.body;
 
-app.get('/api/student/:name', (request, response) => {
-    Student.find({ studentName: request.params.name }, { _id: 0, studentName: 1,previewsMentor:1 })
-        .then(studentdata => {
-            response.status(200).json(studentdata)
-        })
+    Note.findByIdAndUpdate(id, noteToReplace)
+        .then((updatedNote) => {
+            if (updatedNote) {
+                response.status(200).json({ message: 'note updated successfully' });
+            } else {
+                response.status(404).json({ message: 'id does not exists' });
+            }
+        });
 });
+
+app.patch('/api/notes/:id', (request, response) => {
+    const id = request.params.id;
+    const noteToPatch = request.body;
+
+    Note.findByIdAndUpdate(id, noteToPatch)
+        .then((updatedNote) => {
+            if (updatedNote) {
+                response.status(200).json({ message: 'note updated successfully' });
+            } else {
+                response.status(404).json({ message: 'id does not exists' });
+            }
+        });
+});
+
+
 const PORT = 3001;
 app.listen(PORT, () => {
-    console.log(`server running port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
-
