@@ -1,5 +1,7 @@
 const notesRouter = require('express').Router();
 const Note = require('../models/notes');
+
+
 // endpoint to get all the notes
 notesRouter.get('/', (request, response) => {
     Note.find({}, {})
@@ -8,6 +10,8 @@ notesRouter.get('/', (request, response) => {
         });
 });
 
+
+// creates a new resource based on the request data
 notesRouter.post('/', (request, response) => {
     // prepare an object to store it in the collection
     const note = new Note(request.body);
@@ -75,4 +79,5 @@ notesRouter.patch('/:id', (request, response) => {
             }
         });
 });
-module.exports=notesRouter;
+
+module.exports = notesRouter;
