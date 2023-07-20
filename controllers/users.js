@@ -3,7 +3,7 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 
 usersRouter.post('/', async (request, response) => {
-    const {username, email, password } = request.body;
+    const { username, email, password } = request.body;
 
     // convert the plaintext password to hashed password
     const saltRounds = 10;
@@ -13,7 +13,8 @@ usersRouter.post('/', async (request, response) => {
     const user = new User({
         username,
         email,
-        passwordHash
+        passwordHash,
+      
     });
 
     // store it in the database
@@ -21,5 +22,11 @@ usersRouter.post('/', async (request, response) => {
 
     response.status(201).json(savedUser);
 });
+usersRouter.get('/', async (request, response) => {
+    const users = await User.find({}, {});
+
+    response.json(users);
+});
+
 
 module.exports = usersRouter;

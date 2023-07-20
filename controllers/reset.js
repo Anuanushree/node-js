@@ -8,14 +8,14 @@ resetRouter.post('/', async (request, response) => {
     const { email } = request.body;
 
     const user = await User.findOne({ email });
-    console.log(user);
 
     if (!user)
-        return response.status(404).JSON({ error: "user not found" });
+        return response.status(404).json({ error: "user not found" });
 
     const randomstring = Math.random().toString(20).substring(4, 15)
 
-    const link = `http://localhost:3000/reset/${randomstring}`;
+
+    const link = `http://localhost:3000/register/${randomstring}`;
 
     user.resetToken = randomstring;
     await user.save();
@@ -39,4 +39,4 @@ resetRouter.post('/', async (request, response) => {
     }
     sendMail().catch(console.error);
 })
-module.exports = resetRouter;
+module.exports=resetRouter;
