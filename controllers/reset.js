@@ -15,7 +15,7 @@ resetRouter.post('/', async (request, response) => {
     const randomstring = Math.random().toString(20).substring(4, 15)
 
 
-    const link = `https://mellifluous-trifle-95034a.netlify.app/register/${randomstring}`;
+    const link = `http://localhost:3000/register/${randomstring}`;
 
     user.resetToken = randomstring;
     await user.save();
